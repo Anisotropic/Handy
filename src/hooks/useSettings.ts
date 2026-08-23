@@ -4,6 +4,7 @@ import type {
   AppSettings as Settings,
   AudioDevice,
   PostProcessApiFormat,
+  RemoteSttSettings,
 } from "@/bindings";
 
 interface UseSettingsReturn {
@@ -21,6 +22,10 @@ interface UseSettingsReturn {
   updateSetting: <K extends keyof Settings>(
     key: K,
     value: Settings[K],
+  ) => Promise<void>;
+  updateRemoteSttSetting: <K extends keyof RemoteSttSettings>(
+    field: K,
+    value: RemoteSttSettings[K],
   ) => Promise<void>;
   resetSetting: (key: keyof Settings) => Promise<void>;
   refreshSettings: () => Promise<void>;
@@ -72,6 +77,7 @@ export const useSettings = (): UseSettingsReturn => {
     postProcessModelOptions: store.postProcessModelOptions,
     updateChecksLocked: store.updateChecksLocked,
     updateSetting: store.updateSetting,
+    updateRemoteSttSetting: store.updateRemoteSttSetting,
     resetSetting: store.resetSetting,
     refreshSettings: store.refreshSettings,
     refreshAudioDevices: store.refreshAudioDevices,

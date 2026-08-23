@@ -9,17 +9,49 @@ import HandyTextLogo from "../icons/HandyTextLogo";
 import { Button } from "../ui/Button";
 import { useModelStore } from "../../stores/modelStore";
 
+// A model served over HTTP (no local file). Used to render the virtual
+// "Remote Transcription" card at the top of the model list.
+const isRemoteModel = (m: ModelInfo): boolean => m.engine_type === "Remote";
+
+// Virtual remote model used only to render the onboarding card — it is never
+// pushed into the store. Clicking it routes to `onRemoteModel`, not
+// `setActiveModel(id)`, so its `id` need not match the backend id
+// `remote:openai-compatible`.
+const remoteModel: ModelInfo = {
+  id: "remote",
+  name: "Remote Transcription",
+  description: "Transcribe using a remote server instead of a local model.",
+  filename: "",
+  source: "Local",
+  size_mb: 0,
+  is_downloaded: true,
+  is_downloading: false,
+  partial_size: 0,
+  engine_type: "Remote",
+  accuracy_score: 0,
+  speed_score: 0,
+  supports_translation: false,
+  is_recommended: false,
+  supported_languages: [],
+  supports_language_selection: false,
+  is_custom: false,
+  supports_streaming: false,
+  supports_language_detection: false,
+};
+
 interface OnboardingProps {
   onModelSelected: () => void;
   // Shown when the picker was opened from another step (the model update).
   onBack?: () => void;
   preview?: boolean;
+  onRemoteModel?: () => void;
 }
 
 const Onboarding: React.FC<OnboardingProps> = ({
   onModelSelected,
   onBack,
   preview = false,
+  onRemoteModel,
 }) => {
   const { t } = useTranslation();
   const {
@@ -60,7 +92,9 @@ const Onboarding: React.FC<OnboardingProps> = ({
     };
   }, [models]);
 
-  const existingModels = models.filter((m: ModelInfo) => m.is_downloaded);
+  const existingModels = models.filter(
+    (m: ModelInfo) => m.is_downloaded && !isRemoteModel(m),
+  );
 
   const hasRecommended = topPicks.length > 0 || otherRecommended.length > 0;
   // When nothing recommended remains to download (e.g. all already on disk),
@@ -183,6 +217,17 @@ const Onboarding: React.FC<OnboardingProps> = ({
 
       <div className="max-w-[600px] w-full mx-auto text-center flex-1 flex flex-col min-h-0">
         <div className="space-y-6 pb-6">
+          {onRemoteModel && (
+            <ModelCard
+              model={remoteModel}
+              status="available"
+              onSelect={() => onRemoteModel()}
+              hideSize
+              showRecommended={false}
+              disabled={isBusy}
+            />
+          )}
+
           {existingModels.length > 0 && (
             <div className="space-y-3">
               <div className="text-left">

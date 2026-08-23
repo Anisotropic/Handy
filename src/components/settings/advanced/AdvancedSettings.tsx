@@ -25,6 +25,7 @@ import { LazyStreamClose } from "../LazyStreamClose";
 import { FillerWordRemoval } from "../FillerWordRemoval";
 import { ChineseScriptSetting } from "../ChineseScript";
 import { VadBackendSelector } from "../VadBackendSelector";
+import { RemoteSTTSettings } from "../RemoteSTTSettings";
 
 export const AdvancedSettings: React.FC = () => {
   const { t } = useTranslation();
@@ -56,6 +57,10 @@ export const AdvancedSettings: React.FC = () => {
         <ChineseScriptSetting descriptionMode="tooltip" grouped={true} />
         <CustomWords descriptionMode="tooltip" grouped />
         <AppendTrailingSpace descriptionMode="tooltip" grouped={true} />
+      </SettingsGroup>
+
+      <SettingsGroup title={t("settings.advanced.groups.remoteTranscription")}>
+        <RemoteSTTSettings />
       </SettingsGroup>
 
       <SettingsGroup title={t("settings.advanced.groups.history")}>

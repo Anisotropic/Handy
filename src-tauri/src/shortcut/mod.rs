@@ -165,12 +165,29 @@ pub fn change_binding(
     id: String,
     binding: String,
 ) -> Result<BindingResponse, String> {
-    // Reject empty bindings — every shortcut should have a value
+    let mut settings = settings::get_settings(&app);
+
+    // Allow empty binding for transcribe_alt (means "disabled")
     if binding.trim().is_empty() {
+        if id == "transcribe_alt" {
+            // Unregister if it was previously registered
+            if let Some(prev) = settings.bindings.get(&id).cloned() {
+                if !prev.current_binding.is_empty() {
+                    let _ = unregister_shortcut(&app, prev);
+                }
+            }
+            let mut b = settings
+                .bindings
+                .get(&id)
+                .cloned()
+                .expect("transcribe_alt binding must exist in settings");
+            b.current_binding = binding;
+            settings.bindings.insert(id.clone(), b.clone());
+            settings::write_settings(&app, settings);
+            return Ok(BindingResponse { success: true, binding: Some(b), error: None });
+        }
         return Err("Binding cannot be empty".to_string());
     }
-
-    let mut settings = settings::get_settings(&app);
 
     // Get the binding to modify, or create it from defaults if it doesn't exist
     let binding_to_modify = match settings.bindings.get(&id) {
@@ -284,7 +301,7 @@ pub fn reset_binding(app: AppHandle, id: String) -> Result<BindingResponse, Stri
 /// by the recording lifecycle.
 pub fn suspend_all_shortcuts(app: &AppHandle) {
     for (id, binding) in settings::get_bindings(app) {
-        if id == "cancel" {
+        if id == "cancel" || binding.current_binding.is_empty() {
             continue;
         }
         if let Err(e) = unregister_shortcut(app, binding) {
@@ -302,7 +319,7 @@ pub fn suspend_all_shortcuts(app: &AppHandle) {
 pub fn resume_all_shortcuts(app: &AppHandle) {
     let settings = get_settings(app);
     for (id, binding) in &settings.bindings {
-        if id == "cancel" {
+        if id == "cancel" || binding.current_binding.is_empty() {
             continue;
         }
         if id == "transcribe_with_post_process" && !settings.post_process_enabled {
@@ -462,8 +479,8 @@ fn unregister_all_shortcuts(app: &AppHandle, implementation: KeyboardImplementat
     let bindings = settings::get_bindings(app);
 
     for (id, binding) in bindings {
-        // Skip cancel shortcut as it's dynamically registered
-        if id == "cancel" {
+        // Skip cancel shortcut and unbound shortcuts (empty current_binding)
+        if id == "cancel" || binding.current_binding.is_empty() {
             continue;
         }
 
@@ -496,16 +513,21 @@ fn register_all_shortcuts_for_implementation(
             continue;
         }
 
-        // Skip post-processing shortcut when the feature is disabled
-        if id == "transcribe_with_post_process" && !current_settings.post_process_enabled {
-            continue;
-        }
-
         let mut binding = current_settings
             .bindings
             .get(id)
             .cloned()
             .unwrap_or_else(|| default_binding.clone());
+
+        // Skip shortcuts with empty current_binding (disabled)
+        if binding.current_binding.is_empty() {
+            continue;
+        }
+
+        // Skip post-processing shortcut when the feature is disabled
+        if id == "transcribe_with_post_process" && !current_settings.post_process_enabled {
+            continue;
+        }
 
         // Validate the shortcut for the target implementation
         if let Err(e) =

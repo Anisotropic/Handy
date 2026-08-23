@@ -1,6 +1,7 @@
 use anyhow::Result;
 use hound::{WavReader, WavSpec, WavWriter};
 use log::debug;
+use std::io::Cursor;
 use std::path::Path;
 
 /// Read a WAV file and return normalised f32 samples.
@@ -47,4 +48,28 @@ pub fn save_wav_file<P: AsRef<Path>>(file_path: P, samples: &[f32]) -> Result<()
     writer.finalize()?;
     debug!("Saved WAV file: {:?}", file_path.as_ref());
     Ok(())
+}
+
+/// Encode audio samples to a WAV file in memory (16 kHz, mono, 16-bit PCM).
+///
+/// Same specification as [`save_wav_file`]: 16000 Hz / mono / 16-bit Int.
+/// The output can be used directly as a multipart form field for an
+/// OpenAI-compatible STT server.
+pub fn encode_wav_bytes(samples: &[f32]) -> Vec<u8> {
+    let spec = WavSpec {
+        channels: 1,
+        sample_rate: 16000,
+        bits_per_sample: 16,
+        sample_format: hound::SampleFormat::Int,
+    };
+    let mut cursor = Cursor::new(Vec::with_capacity(samples.len() * 2));
+    {
+        let mut writer = WavWriter::new(&mut cursor, spec).expect("in-memory WAV writer");
+        for &sample in samples {
+            let sample_i16 = (sample * i16::MAX as f32) as i16;
+            writer.write_sample(sample_i16).expect("write sample");
+        }
+        writer.finalize().expect("finalize WAV");
+    }
+    cursor.into_inner()
 }
