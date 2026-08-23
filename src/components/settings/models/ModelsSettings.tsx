@@ -30,6 +30,11 @@ const modelSupportsLanguage = (model: ModelInfo, langCode: string): boolean => {
 const isLegacyModel = (model: ModelInfo): boolean =>
   typeof model.source === "object" && "Url" in model.source;
 
+// Remote STT models are served over HTTP (no local file) and cannot be deleted
+// from Settings → Models, so the Delete button is hidden for them.
+const isRemoteModel = (model: ModelInfo): boolean =>
+  model.engine_type === "Remote";
+
 export const ModelsSettings: React.FC = () => {
   const { t } = useTranslation();
   const [switchingModelId, setSwitchingModelId] = useState<string | null>(null);
@@ -411,7 +416,7 @@ export const ModelsSettings: React.FC = () => {
               status={getModelStatus(model.id)}
               onSelect={handleModelSelect}
               onDownload={handleModelDownload}
-              onDelete={handleModelDelete}
+              onDelete={isRemoteModel(model) ? undefined : handleModelDelete}
               onCancel={handleModelCancel}
               downloadProgress={getDownloadProgress(model.id)}
               downloadSpeed={getDownloadSpeed(model.id)}

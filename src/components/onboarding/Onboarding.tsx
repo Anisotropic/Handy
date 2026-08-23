@@ -8,11 +8,43 @@ import ModelCard, { isLegacySource } from "./ModelCard";
 import HandyTextLogo from "../icons/HandyTextLogo";
 import { useModelStore } from "../../stores/modelStore";
 
+// A model served over HTTP (no local file). Used to render the virtual
+// "Remote Transcription" card at the top of the model list.
+const isRemoteModel = (m: ModelInfo): boolean => m.engine_type === "Remote";
+
+// Virtual remote model used only to render the onboarding card — it is never
+// pushed into the store. Clicking it routes to `onRemoteModel`, not
+// `setActiveModel(id)`, so its `id` need not match the backend id
+// `remote:openai-compatible`.
+const remoteModel: ModelInfo = {
+  id: "remote",
+  name: "Remote Transcription",
+  description: "Transcribe using a remote server instead of a local model.",
+  filename: "",
+  source: "Local",
+  size_mb: 0,
+  is_downloaded: true,
+  is_downloading: false,
+  partial_size: 0,
+  is_directory: false,
+  engine_type: "Remote",
+  accuracy_score: 0,
+  speed_score: 0,
+  supports_translation: false,
+  is_recommended: false,
+  supported_languages: [],
+  supports_language_selection: false,
+  is_custom: false,
+  supports_streaming: false,
+  supports_language_detection: false,
+};
+
 interface OnboardingProps {
   onModelSelected: () => void;
+  onRemoteModel?: () => void;
 }
 
-const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
+const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected, onRemoteModel }) => {
   const { t } = useTranslation();
   const {
     models,
@@ -154,7 +186,20 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
 
       <div className="max-w-[600px] w-full mx-auto text-center flex-1 flex flex-col min-h-0">
         <div className="space-y-6 pb-6">
-          {models.some((m: ModelInfo) => m.is_downloaded) && (
+          {onRemoteModel && (
+            <ModelCard
+              model={remoteModel}
+              status="available"
+              onSelect={() => onRemoteModel()}
+              hideSize
+              showRecommended={false}
+              disabled={isBusy}
+            />
+          )}
+
+          {models.some(
+            (m: ModelInfo) => m.is_downloaded && !isRemoteModel(m),
+          ) && (
             <div className="space-y-3">
               <div className="text-left">
                 <h2 className="text-sm font-medium text-text/60">
@@ -162,7 +207,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onModelSelected }) => {
                 </h2>
               </div>
               {models
-                .filter((m: ModelInfo) => m.is_downloaded)
+                .filter((m: ModelInfo) => m.is_downloaded && !isRemoteModel(m))
                 .map((model: ModelInfo) => (
                   <ModelCard
                     key={model.id}

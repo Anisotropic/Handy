@@ -4,6 +4,7 @@ import { listen } from "@tauri-apps/api/event";
 import type {
   AppSettings as Settings,
   AudioDevice,
+  RemoteSttSettings,
   TranscribeAcceleratorSetting,
   OrtAcceleratorSetting,
   VadBackend,
@@ -27,6 +28,10 @@ interface SettingsStore {
   updateSetting: <K extends keyof Settings>(
     key: K,
     value: Settings[K],
+  ) => Promise<void>;
+  updateRemoteSttSetting: <K extends keyof RemoteSttSettings>(
+    field: K,
+    value: RemoteSttSettings[K],
   ) => Promise<void>;
   resetSetting: (key: keyof Settings) => Promise<void>;
   refreshSettings: () => Promise<void>;
@@ -189,6 +194,22 @@ const settingUpdaters: {
     commands.changeExtraRecordingBufferSetting(value as number),
 };
 
+// Updaters for the individual fields of the nested `remote_stt` settings
+// object. Each maps a field to the existing flat Tauri command.
+const remoteSttUpdaters: {
+  [K in keyof RemoteSttSettings]?: (value: RemoteSttSettings[K]) =>
+    Promise<unknown>;
+} = {
+  enabled: (value) => commands.changeRemoteSttEnabled(value as boolean),
+  base_url: (value) => commands.changeRemoteSttBaseUrl(value as string),
+  model: (value) => commands.changeRemoteSttModel(value as string),
+  name: (value) => commands.changeRemoteSttName(value as string),
+  api_keys: (value) =>
+    commands.changeRemoteSttApiKey(
+      ((value as Record<string, string>) ?? {})["remote_stt"] ?? "",
+    ),
+};
+
 export const useSettingsStore = create<SettingsStore>()(
   subscribeWithSelector((set, get) => ({
     settings: null,
@@ -327,6 +348,52 @@ export const useSettingsStore = create<SettingsStore>()(
         console.error(`Failed to update setting ${String(key)}:`, error);
         if (settings) {
           set({ settings: { ...settings, [key]: originalValue } });
+        }
+      } finally {
+        setUpdating(updateKey, false);
+      }
+    },
+
+    // Update a single field of the nested `remote_stt` settings object.
+    // Mirrors `updateSetting` (optimistic update + rollback) but operates on
+    // `settings.remote_stt` instead of a top-level key.
+    updateRemoteSttSetting: async <K extends keyof RemoteSttSettings>(
+      field: K,
+      value: RemoteSttSettings[K],
+    ) => {
+      const { settings, setUpdating } = get();
+      const updateKey = `remote_stt.${String(field)}`;
+      const originalValue = settings?.remote_stt;
+
+      setUpdating(updateKey, true);
+
+      try {
+        set((state) => {
+          if (!state.settings) return { settings: null };
+          // `remote_stt` is optional in the persisted settings; when it is
+          // absent we seed a minimal object with just the field being set
+          // (the backend is the source of truth and refreshes the full object).
+          const nextRemoteStt: RemoteSttSettings = state.settings.remote_stt
+            ? { ...state.settings.remote_stt, [field]: value }
+            : ({ [field]: value } as unknown as RemoteSttSettings);
+          return {
+            settings: { ...state.settings, remote_stt: nextRemoteStt },
+          };
+        });
+
+        const updater = remoteSttUpdaters[field];
+        if (updater) {
+          await updater(value);
+        } else {
+          console.warn(`No handler for remote_stt setting: ${String(field)}`);
+        }
+      } catch (error) {
+        console.error(
+          `Failed to update remote_stt setting ${String(field)}:`,
+          error,
+        );
+        if (settings) {
+          set({ settings: { ...settings, remote_stt: originalValue } });
         }
       } finally {
         setUpdating(updateKey, false);

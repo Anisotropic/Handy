@@ -118,7 +118,8 @@
         "checkFailed": "Échec de la vérification des autorisations. Veuillez réessayer.",
         "requestFailed": "Échec de la demande d'autorisation. Veuillez réessayer."
       }
-    }
+    },
+    "remoteModel": "Passer pour l'instant"
   },
   "modelSelector": {
     "custom": "Personnalisé",
@@ -253,6 +254,7 @@
         "app": "Application",
         "output": "Sortie",
         "transcription": "Transcription",
+        "remoteTranscription": "Remote Transcription",
         "history": "Historique",
         "experimental": "Expérimental"
       },
@@ -613,6 +615,28 @@
         "label": "Afficher les nouveautés",
         "description": "Afficher les notes de version après les mises à jour de Handy"
       }
+    },
+    "remoteStt": {
+      "description": "Utiliser un serveur distant de transcription vocale compatible OpenAI",
+      "enabled": "Activer le STT distant",
+      "displayName": "Nom affiché",
+      "displayNameDescription": "Nom affiché dans le menu déroulant des modèles",
+      "displayNamePlaceholder": "Distant (compatible OpenAI)",
+      "baseUrl": "URL de base",
+      "baseUrlDescription": "URL du point de terminaison compatible OpenAI",
+      "baseUrlPlaceholder": "http://127.0.0.1:5092/v1",
+      "model": "Nom du modèle",
+      "modelPlaceholder": "Laisser vide pour utiliser le modèle par défaut du serveur",
+      "apiKey": "Clé API",
+      "apiKeyPlaceholder": "Facultatif — laisser vide pour aucune authentification",
+      "testConnection": "Tester la connexion",
+      "testing": "Test en cours...",
+      "ready": "Le serveur est prêt et accepte les requêtes.",
+      "notReady": "Le serveur a répondu, mais n'est pas encore prêt.",
+      "unreachable": "Impossible de joindre le serveur. Vérifiez l'URL et réessayez.",
+      "availableModels": "Modèles disponibles",
+      "modelDescription": "Nom de modèle facultatif. Laisser vide pour utiliser le modèle par défaut du serveur.",
+      "apiKeyDescription": "Clé API facultative pour l'authentification. Laisser vide pour aucune authentification."
     }
   },
   "footer": {

@@ -1,7 +1,7 @@
 use super::model_capabilities::{
     CapabilityProbe, CapabilityProber, Compatibility, GgufHeaderProber,
 };
-use crate::settings::{get_settings, write_settings};
+use crate::settings::{get_settings, write_settings, AppSettings};
 use anyhow::Result;
 use flate2::read::GzDecoder;
 use hf_hub::api::tokio::{ApiBuilder, CancellationToken, Progress};
@@ -23,7 +23,10 @@ mod download;
 
 use download::{HttpDownloadOutcome, DOWNLOAD_STALL_TIMEOUT};
 
-#[derive(Debug, Clone, Serialize, Deserialize, Type)]
+/// Fixed model ID for the synthetic remote STT entry.
+pub const REMOTE_STT_MODEL_ID: &str = "remote:openai-compatible";
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Type)]
 pub enum EngineType {
     /// Any GGML/GGUF model loaded through transcribe-cpp (Whisper, Parakeet,
     /// Voxtral, Qwen3-ASR, Nemotron, …). The architecture is auto-detected from
@@ -36,6 +39,9 @@ pub enum EngineType {
     GigaAM,
     Canary,
     Cohere,
+    /// Remote OpenAI-compatible STT (HTTP POST to /v1/audio/transcriptions).
+    /// No local model file — everything happens over HTTP.
+    Remote,
 }
 
 /// Where a model comes from and how Handy obtains it — the routing discriminant
@@ -1111,6 +1117,17 @@ impl ModelManager {
         // find. Additive — see `seed_catalog_models`.
         Self::seed_catalog_models(&mut available_models);
 
+        // Synthesize the remote STT model if enabled (during initial construction)
+        let settings = get_settings(app_handle);
+        if settings.remote_stt.enabled {
+            if let std::collections::hash_map::Entry::Vacant(slot) =
+                available_models.entry(REMOTE_STT_MODEL_ID.to_string())
+            {
+                slot.insert(Self::build_remote_model_info(&settings));
+                info!("Synthesized remote STT model into the registry");
+            }
+        }
+
         // Auto-discover custom transcribe-cpp models (.bin / .gguf) in the models directory
         if let Err(e) = Self::discover_custom_transcribe_models(&models_dir, &mut available_models)
         {
@@ -1184,6 +1201,60 @@ impl ModelManager {
         info!("Seeded {} catalog model(s) into the registry", added);
     }
 
+    /// Build a ModelInfo for the synthetic remote STT entry.
+    fn build_remote_model_info(settings: &AppSettings) -> ModelInfo {
+        ModelInfo {
+            id: REMOTE_STT_MODEL_ID.to_string(),
+            name: settings.remote_stt.name.clone(),
+            description: "Remote OpenAI-compatible STT server".to_string(),
+            filename: String::new(),
+            source: ModelSource::Local,
+            size_mb: 0,
+            is_downloaded: true,
+            is_downloading: false,
+            partial_size: 0,
+            is_directory: false,
+            engine_type: EngineType::Remote,
+            accuracy_score: 0.0,
+            speed_score: 0.0,
+            supports_translation: false,
+            is_recommended: false,
+            supported_languages: Vec::new(),
+            supports_language_selection: false,
+            is_custom: true,
+            supports_streaming: false,
+            supports_language_detection: true,
+        }
+    }
+
+    /// Sync the remote STT model entry into the registry based on current
+    /// settings. When enabled, inserts or refreshes the entry (name update).
+    /// When disabled, removes the entry.
+    ///
+    /// This is a public helper so that settings commands can call it
+    /// directly — the model registry must always reflect the current
+    /// `remote_stt.enabled` setting without requiring a restart.
+    pub fn sync_remote_model(&self, settings: &AppSettings) {
+        let mut models = self.available_models.lock().unwrap();
+        if settings.remote_stt.enabled {
+            // Insert or refresh (name may have changed)
+            if let std::collections::hash_map::Entry::Vacant(slot) =
+                models.entry(REMOTE_STT_MODEL_ID.to_string())
+            {
+                slot.insert(Self::build_remote_model_info(settings));
+                info!("Synthesized remote STT model into the registry");
+            } else {
+                // Refresh the entry in case the name changed
+                let entry = models.get_mut(REMOTE_STT_MODEL_ID).unwrap();
+                entry.name = settings.remote_stt.name.clone();
+            }
+        } else {
+            if models.remove(REMOTE_STT_MODEL_ID).is_some() {
+                info!("Removed remote STT model from registry");
+            }
+        }
+    }
+
     /// Claim the single rescan slot. Returns a guard that releases it on drop,
     /// or `None` if a rescan is already running (callers should just skip).
     fn try_start_rescan(&self) -> Option<RescanGuard> {
@@ -1238,6 +1309,10 @@ impl ModelManager {
                 }
             }
         }
+
+        // Sync the remote STT model entry (may have been toggled on/off)
+        let settings = get_settings(&self.app_handle);
+        self.sync_remote_model(&settings);
 
         self.update_download_status()?;
         self.auto_select_model_if_needed()?;
@@ -1370,6 +1445,11 @@ impl ModelManager {
         let mut vanished_alternates: Vec<String> = Vec::new();
 
         for model in models.values_mut() {
+            // Remote models have no local files — nothing to check.
+            if model.engine_type == EngineType::Remote {
+                continue;
+            }
+
             if let ModelSource::HuggingFace { repo_id, revision } = &model.source {
                 // A models-dir copy counts too: mirror-fallback downloads land
                 // there, and it makes manual drop-ins of catalog files work.
@@ -2360,6 +2440,11 @@ impl ModelManager {
             model_info.ok_or_else(|| anyhow::anyhow!("Model not found: {}", model_id))?;
 
         debug!("ModelManager: Found model info: {:?}", model_info);
+
+        // Remote models have no local files — nothing to delete.
+        if model_info.engine_type == EngineType::Remote {
+            return Ok(());
+        }
 
         if let ModelSource::HuggingFace { repo_id, revision } = &model_info.source {
             let is_alternate_quant =

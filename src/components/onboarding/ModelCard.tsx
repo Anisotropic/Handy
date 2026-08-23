@@ -75,6 +75,7 @@ interface ModelCardProps {
   downloadProgress?: number;
   downloadSpeed?: number; // MB/s
   showRecommended?: boolean;
+  hideSize?: boolean;
 }
 
 const ModelCard: React.FC<ModelCardProps> = ({
@@ -90,6 +91,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
   downloadProgress,
   downloadSpeed,
   showRecommended = true,
+  hideSize = false,
 }) => {
   const { t } = useTranslation();
   const debugMode = useSettingsStore(
@@ -104,7 +106,10 @@ const ModelCard: React.FC<ModelCardProps> = ({
   const displayName = getTranslatedModelName(model, t);
   const displayDescription = getTranslatedModelDescription(model, t);
   const showModelSize =
-    status === "downloadable" || status === "available" || status === "active";
+    (status === "downloadable" ||
+      status === "available" ||
+      status === "active") &&
+    !hideSize;
   const formattedModelSize = formatModelSize(Number(model.size_mb));
   const quantLabel = getQuantLabel(model.filename);
   const capabilityLanguages = getUniqueCapabilityLanguages(

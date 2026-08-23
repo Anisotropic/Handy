@@ -118,7 +118,8 @@
         "checkFailed": "Error al verificar permisos. Por favor, inténtalo de nuevo.",
         "requestFailed": "Error al solicitar permiso. Por favor, inténtalo de nuevo."
       }
-    }
+    },
+    "remoteModel": "Omitir por ahora"
   },
   "modelSelector": {
     "custom": "Personalizado",
@@ -253,6 +254,7 @@
         "app": "Aplicación",
         "output": "Salida",
         "transcription": "Transcripción",
+        "remoteTranscription": "Remote Transcription",
         "history": "Historial",
         "experimental": "Experimental"
       },
@@ -613,6 +615,28 @@
         "label": "Mostrar novedades",
         "description": "Mostrar notas de la versión después de las actualizaciones de Handy"
       }
+    },
+    "remoteStt": {
+      "description": "Usa un servidor remoto de transcripción de voz compatible con OpenAI",
+      "enabled": "Activar STT remoto",
+      "displayName": "Nombre para mostrar",
+      "displayNameDescription": "Nombre que se muestra en el menú desplegable de modelos",
+      "displayNamePlaceholder": "Remoto (compatible con OpenAI)",
+      "baseUrl": "URL base",
+      "baseUrlDescription": "URL del punto final compatible con OpenAI",
+      "baseUrlPlaceholder": "http://127.0.0.1:5092/v1",
+      "model": "Nombre del modelo",
+      "modelPlaceholder": "Déjalo vacío para usar el valor predeterminado del servidor",
+      "apiKey": "Clave API",
+      "apiKeyPlaceholder": "Opcional — déjalo vacío para sin autenticación",
+      "testConnection": "Probar conexión",
+      "testing": "Probando...",
+      "ready": "El servidor está listo y acepta solicitudes.",
+      "notReady": "El servidor respondió pero aún no está listo.",
+      "unreachable": "No se pudo conectar con el servidor. Comprueba la URL e inténtalo de nuevo.",
+      "availableModels": "Modelos disponibles",
+      "modelDescription": "Nombre de modelo opcional. Déjalo vacío para usar el valor predeterminado del servidor.",
+      "apiKeyDescription": "Clave API opcional para autenticación. Déjala vacía para sin autenticación."
     }
   },
   "footer": {

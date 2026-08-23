@@ -517,6 +517,31 @@ impl TranscriptionManager {
             return Err(anyhow::anyhow!(error_msg));
         }
 
+        // Remote models have no local file — selection is enough, no loading needed.
+        // However, we MUST clear any stale local engine and set current_model_id
+        // so that transcribe() doesn't accidentally use a leftover local engine.
+        if model_info.engine_type == EngineType::Remote {
+            // Drop the current engine so a previous local model is freed.
+            {
+                let mut engine = self.lock_engine();
+                *engine = None;
+            }
+            {
+                let mut current_model = self.current_model_id.lock().unwrap();
+                *current_model = Some(model_id.to_string());
+            }
+            let _ = self.app_handle.emit(
+                "model-state-changed",
+                ModelStateEvent {
+                    event_type: "loading_completed".to_string(),
+                    model_id: Some(model_id.to_string()),
+                    model_name: Some(model_info.name.clone()),
+                    error: None,
+                },
+            );
+            return Ok(());
+        }
+
         let model_path = self.model_manager.get_model_path(model_id)?;
 
         // Drop the current engine BEFORE building the new one so transcribe-cpp
@@ -694,6 +719,9 @@ impl TranscriptionManager {
                     anyhow::anyhow!(error_msg)
                 })?;
                 LoadedEngine::Cohere(engine)
+            }
+            EngineType::Remote => {
+                unreachable!("remote models are caught by the guard above and return early")
             }
         };
 
@@ -1185,6 +1213,71 @@ impl TranscriptionManager {
             return Ok(String::new());
         }
 
+        // Get current settings for configuration
+        let settings = get_settings(&self.app_handle);
+
+        // Check if the active model is a remote STT model
+        let active_model = self
+            .get_current_model()
+            .or_else(|| Some(settings.selected_model.clone()))
+            .filter(|s| !s.is_empty())
+            .and_then(|id| self.model_manager.get_model_info(&id));
+
+        if active_model
+            .as_ref()
+            .is_some_and(|m| m.engine_type == EngineType::Remote)
+        {
+            // Remote STT path — encode and POST to server
+            let base_url = settings.remote_stt.base_url.trim_end_matches('/');
+            let url = format!("{}/audio/transcriptions", base_url);
+
+            // Encode WAV in memory
+            let wav_bytes = crate::audio_toolkit::audio::encode_wav_bytes(&audio);
+            let wav_len = wav_bytes.len();
+            let model_name = settings.remote_stt.model.clone();
+            let language =
+                (settings.selected_language != "auto").then(|| settings.selected_language.clone());
+            let api_key = settings.remote_stt_api_key().to_string();
+
+            // reqwest::blocking builds and drops a throwaway tokio runtime on
+            // every blocking call in debug builds, and dropping a runtime from
+            // within an async context panics. Batch transcription is awaited
+            // from a tokio async task (TranscribeAction::stop), so run the
+            // blocking HTTP exchange on a plain thread.
+            let text = std::thread::spawn(move || {
+                send_remote_stt_request(
+                    &url,
+                    &wav_bytes,
+                    &model_name,
+                    language.as_deref(),
+                    &api_key,
+                )
+            })
+            .join()
+            .map_err(|_| anyhow::anyhow!("Remote STT request thread panicked"))??;
+
+            debug!(
+                "Remote STT transcription completed: {} bytes → {} chars",
+                wav_len,
+                text.len()
+            );
+
+            // Return early — fuzzy correction and post-processing will run
+            // after this function returns.
+            if !text.is_empty() {
+                return Ok(text);
+            }
+
+            // Empty result from remote — treat as a valid (silence) response.
+            // Do NOT fall through to the local model: the user selected remote,
+            // so we respect that choice even when the server says "nothing here".
+            debug!(
+                "Remote STT returned empty text for {}-byte audio (silence)",
+                wav_len
+            );
+            return Ok(String::new());
+        }
+
         // Check if model is loaded, if not try to load it
         {
             // If the model is loading, wait for it to complete.
@@ -1198,9 +1291,6 @@ impl TranscriptionManager {
                 return Err(anyhow::anyhow!("Model is not loaded for transcription."));
             }
         }
-
-        // Get current settings for configuration
-        let settings = get_settings(&self.app_handle);
 
         // Validate selected language against the model's supported languages.
         // If the language isn't supported, fall back to "auto" to prevent errors.
@@ -1224,12 +1314,6 @@ impl TranscriptionManager {
             );
         }
 
-        // Whether the loaded transcribe-cpp model advertises
-        // Feature::InitialPrompt. Informational (logged below); the whisper
-        // run extension and the fuzzy-correction skip are gated on
-        // `model_is_whisper` instead, since non-whisper archs can advertise
-        // the feature while rejecting the whisper-kind extension.
-        let mut model_takes_initial_prompt = false;
         // Whether the loaded model is actually whisper-family (arch string).
         // Non-whisper archs (e.g. Voxtral Small) can advertise
         // Feature::InitialPrompt yet reject the whisper-kind run extension
@@ -1275,7 +1359,12 @@ impl TranscriptionManager {
             if let LoadedEngine::TranscribeCpp(session) = &engine {
                 let model = session.model();
                 let caps = model.capabilities();
-                model_takes_initial_prompt = model.supports(Feature::InitialPrompt);
+                // Whether the model advertises Feature::InitialPrompt.
+                // Informational (logged below); the whisper run extension and
+                // the fuzzy-correction skip are gated on `model_is_whisper`
+                // instead, since non-whisper archs can advertise the feature
+                // while rejecting the whisper-kind extension.
+                let model_takes_initial_prompt = model.supports(Feature::InitialPrompt);
                 model_is_whisper = model.arch() == "whisper";
                 model_supports_translate = caps.supports_translate;
                 model_languages = caps.languages;
@@ -1867,6 +1956,69 @@ fn drain_until_finalize(rx: mpsc::Receiver<StreamCmd>) {
             StreamCmd::Cancel => break,
         }
     }
+}
+
+/// Perform the blocking remote STT HTTP exchange (OpenAI-compatible
+/// POST /audio/transcriptions). Must run on a plain thread, never inside a
+/// tokio async context: in debug builds reqwest::blocking builds and drops a
+/// throwaway runtime on every blocking call, and dropping a runtime from an
+/// async context panics ("Cannot drop a runtime in a context where blocking
+/// is not allowed").
+fn send_remote_stt_request(
+    url: &str,
+    wav_bytes: &[u8],
+    model_name: &str,
+    language: Option<&str>,
+    api_key: &str,
+) -> Result<String> {
+    // Build multipart form
+    let mut form = reqwest::blocking::multipart::Form::new()
+        .part(
+            "file",
+            reqwest::blocking::multipart::Part::bytes(wav_bytes.to_vec())
+                .file_name("recording.wav")
+                .mime_str("audio/wav")
+                .unwrap(),
+        )
+        .text("response_format", "json");
+
+    // Add model name only if non-empty
+    if !model_name.is_empty() {
+        form = form.text("model", model_name.to_string());
+    }
+
+    // Add language only if not auto
+    if let Some(language) = language {
+        form = form.text("language", language.to_string());
+    }
+
+    // Build client
+    let client = reqwest::blocking::Client::builder()
+        .timeout(Duration::from_secs(60))
+        .build()
+        .map_err(|e| anyhow::anyhow!("Failed to build HTTP client: {}", e))?;
+
+    // Send request
+    let mut request = client.post(url).multipart(form);
+    if !api_key.is_empty() {
+        request = request.header(
+            reqwest::header::AUTHORIZATION,
+            format!("Bearer {}", api_key),
+        );
+    }
+    let response = request
+        .send()
+        .map_err(|e| anyhow::anyhow!("Remote server unavailable: {}", e))?;
+
+    let body = response
+        .text()
+        .map_err(|e| anyhow::anyhow!("Failed to read response: {}", e))?;
+
+    // Parse JSON response
+    let parsed: serde_json::Value = serde_json::from_str(&body)
+        .map_err(|e| anyhow::anyhow!("Unexpected response format: {}", e))?;
+
+    Ok(parsed["text"].as_str().unwrap_or("").to_string())
 }
 
 /// Initialize the transcribe-cpp native backend once at startup: route native +

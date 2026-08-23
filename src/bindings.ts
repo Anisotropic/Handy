@@ -897,14 +897,100 @@ async updateRecordingRetentionPeriod(period: string) : Promise<Result<null, stri
 }
 },
 /**
- * Checks if the Mac is a laptop by detecting battery presence
- * 
- * This uses pmset to check for battery information.
- * Returns true if a battery is detected (laptop), false otherwise (desktop)
+ * Stub implementation for non-macOS platforms
+ * Always returns false since laptop detection is macOS-specific
  */
 async isLaptop() : Promise<Result<boolean, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("is_laptop") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Check if the remote STT server is reachable and healthy.
+ * 
+ * From `base_url` (e.g. "http://host:5092/v1"), strips the last path
+ * segment to get the health URL: "http://host:5092/health".
+ * 
+ * If /health returns 404 (non-OpenAI-compatible server), falls back to
+ * reporting "server responds" without health details.
+ */
+async testRemoteSttConnection() : Promise<Result<RemoteSttConnectionResult, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("test_remote_stt_connection") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Update the remote STT base URL setting.
+ */
+async changeRemoteSttBaseUrl(baseUrl: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_remote_stt_base_url", { baseUrl }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Update the remote STT API key setting.
+ */
+async changeRemoteSttApiKey(apiKey: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_remote_stt_api_key", { apiKey }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Update the remote STT model name setting.
+ */
+async changeRemoteSttModel(model: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_remote_stt_model", { model }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Update the remote STT display name setting and sync the model registry.
+ */
+async changeRemoteSttName(name: string) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_remote_stt_name", { name }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Toggle remote STT model visibility in the model list.
+ * 
+ * When disabling, also clears the selection if the remote model was active
+ * (so the next transcription doesn't hit "Model not found").
+ */
+async changeRemoteSttEnabled(enabled: boolean) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_remote_stt_enabled", { enabled }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * Enable the remote STT model, select it as the active model, and mark
+ * onboarding as complete. Used by the onboarding "Remote transcribe model"
+ * button.
+ */
+async selectRemoteSttModel() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("select_remote_stt_model") };
 } catch (e) {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
@@ -983,7 +1069,11 @@ vad_backend?: VadBackend;
  * not gated on this — that follows model capability. Migrated from the old
  * `overlay_position` (position `none` → style `None`).
  */
-overlay_style?: OverlayStyle }
+overlay_style?: OverlayStyle; 
+/**
+ * Synthetic remote (OpenAI-compatible) STT model settings.
+ */
+remote_stt?: RemoteSttSettings }
 export type AudioDevice = { index: string; name: string; is_default: boolean }
 export type AutoSubmitKey = "enter" | "ctrl_enter" | "cmd_enter"
 export type AvailableAccelerators = { transcribe: string[]; ort: string[]; gpu_devices: GpuDeviceOption[] }
@@ -996,7 +1086,12 @@ export type EngineType =
  * Voxtral, Qwen3-ASR, Nemotron, …). The architecture is auto-detected from
  * the file, so this one variant covers the whole transcribe-cpp family.
  */
-"TranscribeCpp" | "Parakeet" | "Moonshine" | "MoonshineStreaming" | "SenseVoice" | "GigaAM" | "Canary" | "Cohere"
+"TranscribeCpp" | "Parakeet" | "Moonshine" | "MoonshineStreaming" | "SenseVoice" | "GigaAM" | "Canary" | "Cohere" | 
+/**
+ * Remote OpenAI-compatible STT (HTTP POST to /v1/audio/transcriptions).
+ * No local model file — everything happens over HTTP.
+ */
+"Remote"
 export type GpuDeviceOption = { id: string; name: string; total_vram_mb: number }
 export type HistoryEntry = { id: number; file_name: string; timestamp: number; saved: boolean; title: string; transcription_text: string; post_processed_text: string | null; post_process_prompt: string | null; post_process_requested: boolean }
 export type HistoryUpdatePayload = { action: "added"; entry: HistoryEntry } | { action: "updated"; entry: HistoryEntry } | { action: "deleted"; id: number } | { action: "toggled"; id: number }
@@ -1057,6 +1152,35 @@ export type PasteMethod = "ctrl_v" | "direct" | "none" | "shift_insert" | "ctrl_
 export type PermissionAccess = "allowed" | "denied" | "unknown"
 export type PostProcessProvider = { id: string; label: string; base_url: string; allow_base_url_edit?: boolean; models_endpoint?: string | null; supports_structured_output?: boolean }
 export type RecordingRetentionPeriod = "never" | "preserve_limit" | "days_3" | "weeks_2" | "months_3"
+/**
+ * Health check result returned to the frontend.
+ */
+export type RemoteSttConnectionResult = { ok: boolean; health: RemoteSttHealthInfo }
+/**
+ * Parsed health info from the remote server.
+ */
+export type RemoteSttHealthInfo = { status: string | null; ready: boolean | null; models: string[] | null; loaded: string[] | null; default_model: string | null; error: string | null }
+export type RemoteSttSettings = { 
+/**
+ * Synthetic remote (OpenAI-compatible) STT model exposed in the list. Off by default.
+ */
+enabled: boolean; 
+/**
+ * OpenAI-compatible base URL (e.g. "http://host:5092/v1"). POST {base_url}/audio/transcriptions.
+ */
+base_url?: string; 
+/**
+ * Optional API key, redacted in debug like `post_process_api_keys`. Single "remote_stt" entry.
+ */
+api_keys?: SecretMap; 
+/**
+ * Model name sent to the server. Empty = server default.
+ */
+model: string; 
+/**
+ * Display name in the model dropdown.
+ */
+name?: string }
 export type SecretMap = Partial<{ [key in string]: string }>
 export type SecureInputStatus = { 
 /**

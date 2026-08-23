@@ -729,6 +729,13 @@ pub fn run(cli_args: CliArgs) {
             commands::history::update_history_limit,
             commands::history::update_recording_retention_period,
             helpers::clamshell::is_laptop,
+            commands::remote_stt::test_remote_stt_connection,
+            commands::remote_stt::change_remote_stt_base_url,
+            commands::remote_stt::change_remote_stt_api_key,
+            commands::remote_stt::change_remote_stt_model,
+            commands::remote_stt::change_remote_stt_name,
+            commands::remote_stt::change_remote_stt_enabled,
+            commands::remote_stt::select_remote_stt_model,
         ])
         .events(collect_events![
             managers::history::HistoryUpdatePayload,

@@ -31,6 +31,10 @@
       "speed": "speed"
     },
     "models": {
+      "remote": {
+        "name": "Remote Transcription",
+        "description": "Transcribe using a remote server instead of a local model."
+      },
       "small": {
         "name": "Whisper Small",
         "description": "Fast and fairly accurate."
@@ -253,6 +257,7 @@
         "app": "App",
         "output": "Output",
         "transcription": "Transcription",
+        "remoteTranscription": "Remote Transcription",
         "history": "History",
         "experimental": "Experimental"
       },
@@ -613,6 +618,28 @@
           "details": "Handy's local speech-to-text is built on transcribe.cpp and ggml. Thanks to the amazing work by Georgi Gerganov and contributors."
         }
       }
+    },
+    "remoteStt": {
+      "description": "Use a remote OpenAI-compatible speech-to-text server",
+      "enabled": "Enable Remote STT",
+      "displayName": "Display Name",
+      "displayNameDescription": "Name shown in the model dropdown",
+      "displayNamePlaceholder": "Remote (OpenAI-compatible)",
+      "baseUrl": "Base URL",
+      "baseUrlDescription": "OpenAI-compatible endpoint URL",
+      "baseUrlPlaceholder": "http://127.0.0.1:5092/v1",
+      "model": "Model Name",
+      "modelPlaceholder": "Leave empty to use server default",
+      "apiKey": "API Key",
+      "apiKeyPlaceholder": "Optional — leave empty for no authentication",
+      "testConnection": "Test Connection",
+      "testing": "Testing...",
+      "ready": "Server is ready and accepting requests.",
+      "notReady": "Server responded but is not ready yet.",
+      "unreachable": "Could not reach the server. Check the URL and try again.",
+      "availableModels": "Available models",
+      "modelDescription": "Optional model name. Leave empty to use the server default.",
+      "apiKeyDescription": "Optional API key for authentication. Leave empty for no auth."
     }
   },
   "footer": {

@@ -337,6 +337,36 @@ impl std::ops::DerefMut for SecretMap {
     }
 }
 
+#[derive(Serialize, Deserialize, Debug, Clone, Type)]
+#[serde(default)]
+pub struct RemoteSttSettings {
+    /// Synthetic remote (OpenAI-compatible) STT model exposed in the list. Off by default.
+    pub enabled: bool,
+    /// OpenAI-compatible base URL (e.g. "http://host:5092/v1"). POST {base_url}/audio/transcriptions.
+    #[serde(default = "default_remote_stt_base_url")]
+    pub base_url: String,
+    /// Optional API key, redacted in debug like `post_process_api_keys`. Single "remote_stt" entry.
+    #[serde(default = "default_remote_stt_api_keys")]
+    pub api_keys: SecretMap,
+    /// Model name sent to the server. Empty = server default.
+    pub model: String,
+    /// Display name in the model dropdown.
+    #[serde(default = "default_remote_stt_name")]
+    pub name: String,
+}
+
+impl Default for RemoteSttSettings {
+    fn default() -> Self {
+        Self {
+            enabled: false,
+            base_url: default_remote_stt_base_url(),
+            api_keys: default_remote_stt_api_keys(),
+            model: String::new(),
+            name: default_remote_stt_name(),
+        }
+    }
+}
+
 /* still handy for composing the initial JSON in the store ------------- */
 /// The container-level `serde(default)` (backed by the `Default` impl below)
 /// guarantees every field — including ones added in the future — falls back to
@@ -492,6 +522,9 @@ pub struct AppSettings {
     /// `overlay_position` (position `none` → style `None`).
     #[serde(default = "default_overlay_style")]
     pub overlay_style: OverlayStyle,
+    /// Synthetic remote (OpenAI-compatible) STT model settings.
+    #[serde(default)]
+    pub remote_stt: RemoteSttSettings,
 }
 
 fn default_model() -> String {
@@ -619,6 +652,18 @@ fn default_app_language() -> String {
 
 fn default_show_tray_icon() -> bool {
     true
+}
+
+fn default_remote_stt_base_url() -> String {
+    "http://127.0.0.1:5092/v1".to_string()
+}
+
+fn default_remote_stt_api_keys() -> SecretMap {
+    SecretMap(HashMap::from([("remote_stt".to_string(), String::new())]))
+}
+
+fn default_remote_stt_name() -> String {
+    "Remote (OpenAI-compatible)".to_string()
 }
 
 fn default_post_process_provider_id() -> String {
@@ -947,6 +992,7 @@ pub fn get_default_settings() -> AppSettings {
         vad_enabled: default_vad_enabled(),
         vad_backend: VadBackend::default(),
         overlay_style: default_overlay_style(),
+        remote_stt: RemoteSttSettings::default(),
     }
 }
 
@@ -976,6 +1022,14 @@ impl AppSettings {
         self.post_process_providers
             .iter_mut()
             .find(|provider| provider.id == provider_id)
+    }
+
+    pub fn remote_stt_api_key(&self) -> &str {
+        self.remote_stt
+            .api_keys
+            .get("remote_stt")
+            .map(|s| s.as_str())
+            .unwrap_or("")
     }
 }
 

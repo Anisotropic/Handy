@@ -118,7 +118,8 @@
         "checkFailed": "Machtigingen controleren mislukt. Probeer het opnieuw.",
         "requestFailed": "Machtiging aanvragen mislukt. Probeer het opnieuw."
       }
-    }
+    },
+    "remoteModel": "Nu overslaan"
   },
   "modelSelector": {
     "custom": "Aangepast",
@@ -253,6 +254,7 @@
         "app": "App",
         "output": "Uitvoer",
         "transcription": "Transcriptie",
+        "remoteTranscription": "Remote Transcription",
         "history": "Geschiedenis",
         "experimental": "Experimenteel"
       },
@@ -613,6 +615,28 @@
           "details": "Handy's lokale spraak-naar-tekst is gebouwd op transcribe.cpp en ggml. Met dank aan het geweldige werk van Georgi Gerganov en alle bijdragers."
         }
       }
+    },
+    "remoteStt": {
+      "description": "Gebruik een remote spraak-naar-tekstserver die compatibel is met OpenAI",
+      "enabled": "Remote STT inschakelen",
+      "displayName": "Weergavenaam",
+      "displayNameDescription": "Naam die in de modelkeuzelijst wordt getoond",
+      "displayNamePlaceholder": "Remote (OpenAI-compatibel)",
+      "baseUrl": "Basis-URL",
+      "baseUrlDescription": "OpenAI-compatibele endpoint-URL",
+      "baseUrlPlaceholder": "http://127.0.0.1:5092/v1",
+      "model": "Modelnaam",
+      "modelPlaceholder": "Laat leeg om de serverstandaard te gebruiken",
+      "apiKey": "API-sleutel",
+      "apiKeyPlaceholder": "Optioneel — laat leeg voor geen authenticatie",
+      "testConnection": "Verbinding testen",
+      "testing": "Bezig met testen...",
+      "ready": "De server is klaar en accepteert verzoeken.",
+      "notReady": "De server reageerde, maar is nog niet klaar.",
+      "unreachable": "De server kon niet bereikt worden. Controleer de URL en probeer het opnieuw.",
+      "availableModels": "Beschikbare modellen",
+      "modelDescription": "Optionele modelnaam. Laat leeg om de serverstandaard te gebruiken.",
+      "apiKeyDescription": "Optionele API-sleutel voor authenticatie. Laat leeg voor geen authenticatie."
     }
   },
   "footer": {

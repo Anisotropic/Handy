@@ -118,7 +118,8 @@
         "checkFailed": "فشل التحقق من الأذونات. يرجير المحاولة مرة أخرى.",
         "requestFailed": "فشل طلب الإذن. يرجى المحاولة مرة أخرى."
       }
-    }
+    },
+    "remoteModel": "تخطَّ الآن"
   },
   "modelSelector": {
     "custom": "مخصص",
@@ -230,6 +231,7 @@
         "app": "التطبيق",
         "output": "الإخراج",
         "transcription": "التفريغ الصوتي",
+        "remoteTranscription": "Remote Transcription",
         "history": "السجل",
         "experimental": "تجريبي"
       },
@@ -613,6 +615,28 @@
         "label": "إعادة الفحص",
         "tooltip": "إعادة الفحص بحثًا عن النماذج المضافة إلى مجلد النماذج أو ذاكرة Hugging Face التخزينية المؤقتة خارج Handy"
       }
+    },
+    "remoteStt": {
+      "description": "استخدم خادم تحويل الكلام إلى نص عن بُعد متوافق مع OpenAI",
+      "enabled": "تفعيل STT عن بُعد",
+      "displayName": "الاسم المعروض",
+      "displayNameDescription": "الاسم الظاهر في قائمة اختيار النموذج",
+      "displayNamePlaceholder": "عن بُعد (متوافق مع OpenAI)",
+      "baseUrl": "URL الأساسي",
+      "baseUrlDescription": "عنوان endpoint متوافق مع OpenAI",
+      "baseUrlPlaceholder": "http://127.0.0.1:5092/v1",
+      "model": "اسم النموذج",
+      "modelPlaceholder": "اتركه فارغًا لاستخدام الافتراضي من الخادم",
+      "apiKey": "مفتاح API",
+      "apiKeyPlaceholder": "اختياري — اتركه فارغًا لعدم استخدام المصادقة",
+      "testConnection": "اختبار الاتصال",
+      "testing": "جارٍ الاختبار...",
+      "ready": "الخادم جاهز ويستقبل الطلبات.",
+      "notReady": "استجاب الخادم لكنه غير جاهز بعد.",
+      "unreachable": "تعذر الوصول إلى الخادم. تحقق من URL وحاول مرة أخرى.",
+      "availableModels": "النماذج المتاحة",
+      "modelDescription": "اسم نموذج اختياري. اتركه فارغًا لاستخدام الافتراضي من الخادم.",
+      "apiKeyDescription": "مفتاح API اختياري للمصادقة. اتركه فارغًا لعدم استخدام المصادقة."
     }
   },
   "footer": {

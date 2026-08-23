@@ -118,7 +118,8 @@
         "checkFailed": "Nie udało się sprawdzić uprawnień. Spróbuj ponownie.",
         "requestFailed": "Nie udało się poprosić o uprawnienie. Spróbuj ponownie."
       }
-    }
+    },
+    "remoteModel": "Pomiń na razie"
   },
   "modelSelector": {
     "custom": "Własny",
@@ -253,6 +254,7 @@
         "app": "Aplikacja",
         "output": "Wyjście",
         "transcription": "Transkrypcja",
+        "remoteTranscription": "Remote Transcription",
         "history": "Historia",
         "experimental": "Eksperymentalne"
       },
@@ -613,6 +615,28 @@
         "label": "Pokaż nowości",
         "description": "Pokazuj informacje o wydaniu po aktualizacjach Handy"
       }
+    },
+    "remoteStt": {
+      "description": "Użyj zdalnego serwera transkrypcji mowy kompatybilnego z OpenAI",
+      "enabled": "Włącz zdalne STT",
+      "displayName": "Wyświetlana nazwa",
+      "displayNameDescription": "Nazwa wyświetlana w menu rozwijanym modeli",
+      "displayNamePlaceholder": "Zdalny (kompatybilny z OpenAI)",
+      "baseUrl": "Adres URL bazowy",
+      "baseUrlDescription": "Adres URL punktu końcowego kompatybilnego z OpenAI",
+      "baseUrlPlaceholder": "http://127.0.0.1:5092/v1",
+      "model": "Nazwa modelu",
+      "modelPlaceholder": "Zostaw puste, aby użyć domyślnej wartości serwera",
+      "apiKey": "Klucz API",
+      "apiKeyPlaceholder": "Opcjonalnie — zostaw puste, aby nie używać uwierzytelniania",
+      "testConnection": "Testuj połączenie",
+      "testing": "Testowanie...",
+      "ready": "Serwer jest gotowy i przyjmuje żądania.",
+      "notReady": "Serwer odpowiedział, ale jeszcze nie jest gotowy.",
+      "unreachable": "Nie można połączyć się z serwerem. Sprawdź adres URL i spróbuj ponownie.",
+      "availableModels": "Dostępne modele",
+      "modelDescription": "Opcjonalna nazwa modelu. Zostaw puste, aby użyć domyślnej wartości serwera.",
+      "apiKeyDescription": "Opcjonalny klucz API do uwierzytelniania. Zostaw pusty, aby nie używać uwierzytelniania."
     }
   },
   "footer": {

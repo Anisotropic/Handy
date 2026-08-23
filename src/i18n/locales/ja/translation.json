@@ -118,7 +118,8 @@
         "checkFailed": "権限の確認に失敗しました。もう一度お試しください。",
         "requestFailed": "権限のリクエストに失敗しました。もう一度お試しください。"
       }
-    }
+    },
+    "remoteModel": "今のところスキップ"
   },
   "modelSelector": {
     "custom": "カスタム",
@@ -253,6 +254,7 @@
         "app": "アプリ",
         "output": "出力",
         "transcription": "文字起こし",
+        "remoteTranscription": "Remote Transcription",
         "history": "履歴",
         "experimental": "実験的"
       },
@@ -613,6 +615,28 @@
         "label": "新機能を表示",
         "description": "Handy のアップデート後にリリースノートを表示"
       }
+    },
+    "remoteStt": {
+      "description": "OpenAI 互換のリモート音声認識サーバーを使用",
+      "enabled": "リモート STT を有効化",
+      "displayName": "表示名",
+      "displayNameDescription": "モデルのドロップダウンに表示される名前",
+      "displayNamePlaceholder": "リモート(OpenAI 互換)",
+      "baseUrl": "ベース URL",
+      "baseUrlDescription": "OpenAI 互換のエンドポイント URL",
+      "baseUrlPlaceholder": "http://127.0.0.1:5092/v1",
+      "model": "モデル名",
+      "modelPlaceholder": "空欄にするとサーバーのデフォルトを使用します",
+      "apiKey": "API キー",
+      "apiKeyPlaceholder": "任意 — 認証なしの場合は空欄のまま",
+      "testConnection": "接続をテスト",
+      "testing": "テスト中...",
+      "ready": "サーバーは準備ができており、リクエストを受信しています。",
+      "notReady": "サーバーは応答しましたが、まだ準備できていません。",
+      "unreachable": "サーバーに接続できません。URL を確認して再試行してください。",
+      "availableModels": "利用可能なモデル",
+      "modelDescription": "モデル名(任意)。空欄にするとサーバーのデフォルトを使用します。",
+      "apiKeyDescription": "認証用の API キー(任意)。認証なしの場合は空欄のまま。"
     }
   },
   "footer": {

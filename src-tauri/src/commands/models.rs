@@ -1,4 +1,4 @@
-use crate::managers::model::{ModelInfo, ModelManager};
+use crate::managers::model::{EngineType, ModelInfo, ModelManager};
 use crate::managers::transcription::{ModelStateEvent, TranscriptionManager};
 use crate::settings::{get_settings, write_settings, ModelUnloadTimeout};
 use log::error;
@@ -127,7 +127,11 @@ pub fn switch_active_model(app: &AppHandle, model_id: &str) -> Result<(), String
 
     // Skip eager loading if unload is set to "Immediately" — the model
     // will be loaded on-demand during the next transcription.
-    if unload_timeout == ModelUnloadTimeout::Immediately {
+    // Exception: Remote models still need load_model to clear any stale
+    // local engine and set current_model_id, even in Immediately mode.
+    if unload_timeout == ModelUnloadTimeout::Immediately
+        && model_info.engine_type != EngineType::Remote
+    {
         // Notify frontend — load_model won't be called so no events
         // would otherwise be emitted.
         let _ = app.emit(

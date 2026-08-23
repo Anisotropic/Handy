@@ -118,7 +118,8 @@
         "checkFailed": "अनुमतियां जांची नहीं जा सकीं. कृपया फिर से कोशिश करें.",
         "requestFailed": "अनुमति मांगी नहीं जा सकी. कृपया फिर से कोशिश करें."
       }
-    }
+    },
+    "remoteModel": "अभी के लिए छोड़ें"
   },
   "modelSelector": {
     "custom": "कस्टम",
@@ -253,6 +254,7 @@
         "app": "ऐप",
         "output": "आउटपुट",
         "transcription": "ट्रांसक्रिप्शन",
+        "remoteTranscription": "Remote Transcription",
         "history": "इतिहास",
         "experimental": "प्रायोगिक"
       },
@@ -613,6 +615,28 @@
           "details": "Handy का लोकल स्पीच-टू-टेक्स्ट transcribe.cpp और ggml पर आधारित है. Georgi Gerganov और योगदान देने वालों के शानदार काम के लिए धन्यवाद."
         }
       }
+    },
+    "remoteStt": {
+      "description": "OpenAI-संगत रिमोट वॉइस-टू-टेक्स्ट सर्वर का उपयोग करें",
+      "enabled": "रिमोट STT सक्षम करें",
+      "displayName": "प्रदर्शित नाम",
+      "displayNameDescription": "मॉडल ड्रॉपडाउन में दिखाया जाने वाला नाम",
+      "displayNamePlaceholder": "रिमोट (OpenAI-संगत)",
+      "baseUrl": "बेस URL",
+      "baseUrlDescription": "OpenAI-संगत एंडपॉइंट URL",
+      "baseUrlPlaceholder": "http://127.0.0.1:5092/v1",
+      "model": "मॉडल का नाम",
+      "modelPlaceholder": "सर्वर डिफ़ॉल्ट उपयोग करने के लिए खाली छोड़ें",
+      "apiKey": "API कुंजी",
+      "apiKeyPlaceholder": "वैकल्पिक — प्रमाणीकरण के बिना खाली छोड़ें",
+      "testConnection": "कनेक्शन टेस्ट करें",
+      "testing": "टेस्ट हो रहा है...",
+      "ready": "सर्वर तैयार है और अनुरोध स्वीकार कर रहा है।",
+      "notReady": "सर्वर ने उत्तर दिया लेकिन अभी तैयार नहीं है।",
+      "unreachable": "सर्वर तक नहीं पहुँच सका। URL जाँचें और पुनः प्रयास करें।",
+      "availableModels": "उपलब्ध मॉडल",
+      "modelDescription": "वैकल्पिक मॉडल नाम। सर्वर डिफ़ॉल्ट उपयोग करने के लिए खाली छोड़ें।",
+      "apiKeyDescription": "प्रमाणीकरण हेतु वैकल्पिक API कुंजी। प्रमाणीकरण के बिना खाली छोड़ें।"
     }
   },
   "footer": {

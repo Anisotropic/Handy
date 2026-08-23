@@ -118,7 +118,8 @@
         "checkFailed": "檢查權限失敗，請重試",
         "requestFailed": "請求權限失敗，請重試"
       }
-    }
+    },
+    "remoteModel": "暫時跳過"
   },
   "modelSelector": {
     "custom": "自訂",
@@ -253,6 +254,7 @@
         "app": "應用程式",
         "output": "輸出",
         "transcription": "轉錄",
+        "remoteTranscription": "Remote Transcription",
         "history": "歷史",
         "experimental": "實驗性"
       },
@@ -613,6 +615,28 @@
         "label": "顯示新功能",
         "description": "Handy 更新後顯示版本資訊"
       }
+    },
+    "remoteStt": {
+      "description": "使用相容於 OpenAI 的遠端語音轉文字伺服器",
+      "enabled": "啟用遠端 STT",
+      "displayName": "顯示名稱",
+      "displayNameDescription": "顯示在模型選單中的名稱",
+      "displayNamePlaceholder": "遠端(OpenAI 相容)",
+      "baseUrl": "基礎 URL",
+      "baseUrlDescription": "OpenAI 相容的端點 URL",
+      "baseUrlPlaceholder": "http://127.0.0.1:5092/v1",
+      "model": "模型名稱",
+      "modelPlaceholder": "留空以使用伺服器預設值",
+      "apiKey": "API 金鑰",
+      "apiKeyPlaceholder": "選填 — 留空即不需驗證",
+      "testConnection": "測試連線",
+      "testing": "測試中...",
+      "ready": "伺服器已準備就緒，可接受請求。",
+      "notReady": "伺服器已回應，但尚未準備就緒。",
+      "unreachable": "無法連線至伺服器。請檢查 URL 後重試。",
+      "availableModels": "可用的模型",
+      "modelDescription": "模型名稱（選填）。留空以使用伺服器預設值。",
+      "apiKeyDescription": "用於驗證的 API 金鑰（選填）。留空即不需驗證。"
     }
   },
   "footer": {

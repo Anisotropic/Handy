@@ -118,7 +118,8 @@
         "checkFailed": "Impossibile verificare i permessi. Riprova.",
         "requestFailed": "Impossibile richiedere il permesso. Riprova."
       }
-    }
+    },
+    "remoteModel": "Salta per ora"
   },
   "modelSelector": {
     "custom": "Personalizzato",
@@ -253,6 +254,7 @@
         "app": "App",
         "output": "Output",
         "transcription": "Trascrizione",
+        "remoteTranscription": "Remote Transcription",
         "history": "Cronologia",
         "experimental": "Sperimentale"
       },
@@ -613,6 +615,28 @@
         "label": "Mostra novità",
         "description": "Mostra le note di rilascio dopo gli aggiornamenti di Handy"
       }
+    },
+    "remoteStt": {
+      "description": "Usa un server remoto di trascrizione vocale compatibile con OpenAI",
+      "enabled": "Abilita STT remoto",
+      "displayName": "Nome visualizzato",
+      "displayNameDescription": "Nome mostrato nel menu a discesa dei modelli",
+      "displayNamePlaceholder": "Remoto (compatibile con OpenAI)",
+      "baseUrl": "URL di base",
+      "baseUrlDescription": "URL dell'endpoint compatibile con OpenAI",
+      "baseUrlPlaceholder": "http://127.0.0.1:5092/v1",
+      "model": "Nome modello",
+      "modelPlaceholder": "Lascia vuoto per usare il predefinito del server",
+      "apiKey": "Chiave API",
+      "apiKeyPlaceholder": "Facoltativo — lascia vuoto per nessuna autenticazione",
+      "testConnection": "Testa connessione",
+      "testing": "Test in corso...",
+      "ready": "Il server è pronto e accetta richieste.",
+      "notReady": "Il server ha risposto ma non è ancora pronto.",
+      "unreachable": "Impossibile raggiungere il server. Controlla l'URL e riprova.",
+      "availableModels": "Modelli disponibili",
+      "modelDescription": "Nome modello facoltativo. Lascia vuoto per usare il predefinito del server.",
+      "apiKeyDescription": "Chiave API facoltativa per l'autenticazione. Lascia vuota per nessuna autenticazione."
     }
   },
   "footer": {

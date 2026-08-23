@@ -251,6 +251,16 @@ function App() {
     setOnboardingStep("done");
   };
 
+  const handleRemoteModelSelected = async () => {
+    try {
+      await commands.selectRemoteSttModel();
+      setOnboardingStep("done");
+    } catch (e) {
+      console.error("Failed to select remote model:", e);
+      toast.error(t("onboarding.errors.selectModel"));
+    }
+  };
+
   // Rendered once around every step below (including onboarding) so
   // toast.error() calls surface to the user. sonner renders via a portal, so
   // its position in the tree doesn't affect layout. Without this, errors during
@@ -287,7 +297,12 @@ function App() {
       <AccessibilityOnboarding onComplete={handleAccessibilityComplete} />
     );
   } else if (onboardingStep === "model") {
-    content = <Onboarding onModelSelected={handleModelSelected} />;
+    content = (
+      <Onboarding
+        onModelSelected={handleModelSelected}
+        onRemoteModel={handleRemoteModelSelected}
+      />
+    );
   } else {
     content = (
       <div

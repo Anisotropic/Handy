@@ -118,7 +118,8 @@
         "checkFailed": "Erro ao verificar permissões. Por favor, tente novamente.",
         "requestFailed": "Erro ao solicitar permissão. Por favor, tente novamente."
       }
-    }
+    },
+    "remoteModel": "Pular por enquanto"
   },
   "modelSelector": {
     "custom": "Personalizado",
@@ -253,6 +254,7 @@
         "app": "Aplicativo",
         "output": "Saída",
         "transcription": "Transcrição",
+        "remoteTranscription": "Remote Transcription",
         "history": "Histórico",
         "experimental": "Experimental"
       },
@@ -613,6 +615,28 @@
         "label": "Mostrar novidades",
         "description": "Mostrar notas de versão após atualizações do Handy"
       }
+    },
+    "remoteStt": {
+      "description": "Usar um servidor remoto de transcrição de fala compatível com a OpenAI",
+      "enabled": "Ativar STT remoto",
+      "displayName": "Nome de exibição",
+      "displayNameDescription": "Nome exibido na lista suspensa de modelos",
+      "displayNamePlaceholder": "Remoto (compatível com a OpenAI)",
+      "baseUrl": "URL base",
+      "baseUrlDescription": "URL do endpoint compatível com a OpenAI",
+      "baseUrlPlaceholder": "http://127.0.0.1:5092/v1",
+      "model": "Nome do modelo",
+      "modelPlaceholder": "Deixe em branco para usar o padrão do servidor",
+      "apiKey": "Chave de API",
+      "apiKeyPlaceholder": "Opcional — deixe em branco para sem autenticação",
+      "testConnection": "Testar conexão",
+      "testing": "Testando...",
+      "ready": "O servidor está pronto e aceitando solicitações.",
+      "notReady": "O servidor respondeu, mas ainda não está pronto.",
+      "unreachable": "Não foi possível conectar ao servidor. Verifique a URL e tente novamente.",
+      "availableModels": "Modelos disponíveis",
+      "modelDescription": "Nome do modelo opcional. Deixe em branco para usar o padrão do servidor.",
+      "apiKeyDescription": "Chave de API opcional para autenticação. Deixe em branco para sem autenticação."
     }
   },
   "footer": {

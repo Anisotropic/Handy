@@ -1,6 +1,10 @@
 import { useEffect } from "react";
 import { useSettingsStore } from "../stores/settingsStore";
-import type { AppSettings as Settings, AudioDevice } from "@/bindings";
+import type {
+  AppSettings as Settings,
+  AudioDevice,
+  RemoteSttSettings,
+} from "@/bindings";
 
 interface UseSettingsReturn {
   // State
@@ -16,6 +20,10 @@ interface UseSettingsReturn {
   updateSetting: <K extends keyof Settings>(
     key: K,
     value: Settings[K],
+  ) => Promise<void>;
+  updateRemoteSttSetting: <K extends keyof RemoteSttSettings>(
+    field: K,
+    value: RemoteSttSettings[K],
   ) => Promise<void>;
   resetSetting: (key: keyof Settings) => Promise<void>;
   refreshSettings: () => Promise<void>;
@@ -62,6 +70,7 @@ export const useSettings = (): UseSettingsReturn => {
     audioFeedbackEnabled: store.settings?.audio_feedback || false,
     postProcessModelOptions: store.postProcessModelOptions,
     updateSetting: store.updateSetting,
+    updateRemoteSttSetting: store.updateRemoteSttSetting,
     resetSetting: store.resetSetting,
     refreshSettings: store.refreshSettings,
     refreshAudioDevices: store.refreshAudioDevices,

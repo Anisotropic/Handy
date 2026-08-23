@@ -118,7 +118,8 @@
         "checkFailed": "İzinler kontrol edilemedi. Lütfen tekrar deneyin.",
         "requestFailed": "İzin isteği başarısız oldu. Lütfen tekrar deneyin."
       }
-    }
+    },
+    "remoteModel": "Şimdilik geç"
   },
   "modelSelector": {
     "custom": "Özel",
@@ -253,6 +254,7 @@
         "app": "Uygulama",
         "output": "Çıktı",
         "transcription": "Transkripsiyon",
+        "remoteTranscription": "Remote Transcription",
         "history": "Geçmiş",
         "experimental": "Deneysel"
       },
@@ -613,6 +615,28 @@
         "label": "Yenilikleri Göster",
         "description": "Handy güncellemelerinden sonra sürüm notlarını göster"
       }
+    },
+    "remoteStt": {
+      "description": "OpenAI ile uyumlu uzak konuşma-metin sunucusu kullanın",
+      "enabled": "Uzak STT'yi etkinleştir",
+      "displayName": "Görünen ad",
+      "displayNameDescription": "Model açılır listesinde görünen ad",
+      "displayNamePlaceholder": "Uzak (OpenAI ile uyumlu)",
+      "baseUrl": "Ana URL",
+      "baseUrlDescription": "OpenAI ile uyumlu uç nokta URL'si",
+      "baseUrlPlaceholder": "http://127.0.0.1:5092/v1",
+      "model": "Model adı",
+      "modelPlaceholder": "Sunucunun varsayılanını kullanmak için boş bırakın",
+      "apiKey": "API Anahtarı",
+      "apiKeyPlaceholder": "İsteğe bağlı — kimlik doğrulama olmadan boş bırakın",
+      "testConnection": "Bağlantıyı test et",
+      "testing": "Test ediliyor...",
+      "ready": "Sunucu hazır ve istekleri kabul ediyor.",
+      "notReady": "Sunucu yanıt verdi ancak henüz hazır değil.",
+      "unreachable": "Sunucuya ulaşılamadı. URL'yi kontrol edin ve tekrar deneyin.",
+      "availableModels": "Mevcut modeller",
+      "modelDescription": "İsteğe bağlı model adı. Sunucunun varsayılanını kullanmak için boş bırakın.",
+      "apiKeyDescription": "Kimlik doğrulama için isteğe bağlı API anahtarı. Kimlik doğrulama olmadan boş bırakın."
     }
   },
   "footer": {

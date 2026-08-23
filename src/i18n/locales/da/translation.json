@@ -118,7 +118,8 @@
         "checkFailed": "Kunne ikke tjekke tilladelser. Prøv igen.",
         "requestFailed": "Kunne ikke anmode om tilladelse. Prøv igen."
       }
-    }
+    },
+    "remoteModel": "Spring over for nu"
   },
   "modelSelector": {
     "custom": "Brugerdefineret",
@@ -253,6 +254,7 @@
         "app": "App",
         "output": "Output",
         "transcription": "Transskription",
+        "remoteTranscription": "Remote Transcription",
         "history": "Historik",
         "experimental": "Eksperimentel"
       },
@@ -613,6 +615,28 @@
           "details": "Handys lokale tale-til-tekst funktionalitet er bygget på transcribe.cpp og ggml. Tak for det fantastiske arbejde af Georgi Gerganov og bidragyderne."
         }
       }
+    },
+    "remoteStt": {
+      "description": "Brug en fjerbaseret tale-til-tekstserver, der er kompatibel med OpenAI",
+      "enabled": "Aktivér fjerbaseret STT",
+      "displayName": "Vist navn",
+      "displayNameDescription": "Navnet vist i modeldropdownmenuen",
+      "displayNamePlaceholder": "Fjerbaseret (OpenAI-kompatibel)",
+      "baseUrl": "Basis-URL",
+      "baseUrlDescription": "OpenAI-kompatibel endpoint-URL",
+      "baseUrlPlaceholder": "http://127.0.0.1:5092/v1",
+      "model": "Modelnavn",
+      "modelPlaceholder": "Lad stå tomt for at bruge serverens standard",
+      "apiKey": "API-nøgle",
+      "apiKeyPlaceholder": "Valgfrit — lad stå tomt for ingen godkendelse",
+      "testConnection": "Test forbindelse",
+      "testing": "Tester...",
+      "ready": "Serveren er klar og accepterer anmodninger.",
+      "notReady": "Serveren svarede, men er ikke klar endnu.",
+      "unreachable": "Kunne ikke nå serveren. Tjek URL'en og prøv igen.",
+      "availableModels": "Tilgængelige modeller",
+      "modelDescription": "Valgfrit modelnavn. Lad stå tomt for at bruge serverens standard.",
+      "apiKeyDescription": "Valgfri API-nøgle til godkendelse. Lad stå tomt for ingen godkendelse."
     }
   },
   "footer": {

@@ -118,7 +118,8 @@
         "checkFailed": "בדיקת ההרשאות נכשלה. נסה שוב.",
         "requestFailed": "בקשת ההרשאה נכשלה. נסה שוב."
       }
-    }
+    },
+    "remoteModel": "לדלג כעת"
   },
   "modelSelector": {
     "custom": "מותאם אישית",
@@ -253,6 +254,7 @@
         "app": "אפליקציה",
         "output": "פלט",
         "transcription": "תמלול",
+        "remoteTranscription": "Remote Transcription",
         "history": "היסטוריה",
         "experimental": "ניסיוני"
       },
@@ -613,6 +615,28 @@
         "label": "הצג מה חדש",
         "description": "הצג הערות גרסה לאחר עדכוני Handy"
       }
+    },
+    "remoteStt": {
+      "description": "השתמש בשרת זיהוי דיבור מרוחק תואם OpenAI",
+      "enabled": "הפעל STT מרוחק",
+      "displayName": "שם מוצג",
+      "displayNameDescription": "השם המוצג ברשימת הנפתח של המודלים",
+      "displayNamePlaceholder": "מרוחק (תואם OpenAI)",
+      "baseUrl": "כתובת בסיס",
+      "baseUrlDescription": "כתובת endpoint תואמת OpenAI",
+      "baseUrlPlaceholder": "http://127.0.0.1:5092/v1",
+      "model": "שם מודל",
+      "modelPlaceholder": "השאר ריק כדי להשתמש במודל ברירת המחדל של השרת",
+      "apiKey": "מפתח API",
+      "apiKeyPlaceholder": "לא חובה — השאר ריק ללא אימות",
+      "testConnection": "בדיקת חיבור",
+      "testing": "מבצע בדיקה...",
+      "ready": "השרת מוכן ומקבל בקשות.",
+      "notReady": "השרת הגיב אך עדיין אינו מוכן.",
+      "unreachable": "לא ניתן להגיע לשרת. בדוק את הכתובת ונסה שוב.",
+      "availableModels": "מודלים זמינים",
+      "modelDescription": "שם מודל לא חובה. השאר ריק כדי להשתמש במודל ברירת המחדל של השרת.",
+      "apiKeyDescription": "מפתח API לא חובה לאימות. השאר ריק ללא אימות."
     }
   },
   "footer": {

@@ -118,7 +118,8 @@
         "checkFailed": "检查权限失败。请重试。",
         "requestFailed": "请求权限失败。请重试。"
       }
-    }
+    },
+    "remoteModel": "暂时跳过"
   },
   "modelSelector": {
     "custom": "自定义",
@@ -253,6 +254,7 @@
         "app": "应用",
         "output": "输出",
         "transcription": "转录",
+        "remoteTranscription": "Remote Transcription",
         "history": "历史",
         "experimental": "实验性"
       },
@@ -613,6 +615,28 @@
         "label": "显示新功能",
         "description": "Handy 更新后显示发行说明"
       }
+    },
+    "remoteStt": {
+      "description": "使用兼容 OpenAI 的远程语音转文字服务器",
+      "enabled": "启用远程 STT",
+      "displayName": "显示名称",
+      "displayNameDescription": "显示在模型下拉列表中的名称",
+      "displayNamePlaceholder": "远程(OpenAI 兼容)",
+      "baseUrl": "基础 URL",
+      "baseUrlDescription": "兼容 OpenAI 的端点 URL",
+      "baseUrlPlaceholder": "http://127.0.0.1:5092/v1",
+      "model": "模型名称",
+      "modelPlaceholder": "留空以使用服务器默认值",
+      "apiKey": "API 密钥",
+      "apiKeyPlaceholder": "可选 — 留空则不进行身份验证",
+      "testConnection": "测试连接",
+      "testing": "测试中...",
+      "ready": "服务器已就绪，可接受请求。",
+      "notReady": "服务器已响应，但尚未就绪。",
+      "unreachable": "无法连接到服务器。请检查 URL 后重试。",
+      "availableModels": "可用模型",
+      "modelDescription": "模型名称（可选）。留空以使用服务器默认值。",
+      "apiKeyDescription": "用于身份验证的 API 密钥（可选）。留空则不进行身份验证。"
     }
   },
   "footer": {

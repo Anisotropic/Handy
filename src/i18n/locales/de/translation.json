@@ -118,7 +118,8 @@
         "checkFailed": "Berechtigungsprüfung fehlgeschlagen. Bitte erneut versuchen.",
         "requestFailed": "Berechtigungsanfrage fehlgeschlagen. Bitte erneut versuchen."
       }
-    }
+    },
+    "remoteModel": "Vorerst überspringen"
   },
   "modelSelector": {
     "custom": "Benutzerdefiniert",
@@ -253,6 +254,7 @@
         "app": "App",
         "output": "Ausgabe",
         "transcription": "Transkription",
+        "remoteTranscription": "Remote Transcription",
         "history": "Verlauf",
         "experimental": "Experimentell"
       },
@@ -613,6 +615,28 @@
         "label": "Neuerungen anzeigen",
         "description": "Versionshinweise nach Handy-Updates anzeigen"
       }
+    },
+    "remoteStt": {
+      "description": "Remote-Server für Spracherkennung (OpenAI-kompatibel) verwenden",
+      "enabled": "Remote-STT aktivieren",
+      "displayName": "Anzeigename",
+      "displayNameDescription": "Name in der Modell-Auswahl",
+      "displayNamePlaceholder": "Remote (OpenAI-kompatibel)",
+      "baseUrl": "Basis-URL",
+      "baseUrlDescription": "OpenAI-kompatible Endpunkt-URL",
+      "baseUrlPlaceholder": "http://127.0.0.1:5092/v1",
+      "model": "Modellname",
+      "modelPlaceholder": "Leer lassen, um den Serverstandard zu verwenden",
+      "apiKey": "API-Schlüssel",
+      "apiKeyPlaceholder": "Optional — leer lassen für keine Authentifizierung",
+      "testConnection": "Verbindung testen",
+      "testing": "Wird getestet...",
+      "ready": "Der Server ist bereit und akzeptiert Anfragen.",
+      "notReady": "Der Server hat geantwortet, ist aber noch nicht bereit.",
+      "unreachable": "Server nicht erreichbar. Prüfe die URL und versuche es erneut.",
+      "availableModels": "Verfügbare Modelle",
+      "modelDescription": "Optionaler Modellname. Leer lassen, um den Serverstandard zu verwenden.",
+      "apiKeyDescription": "Optionaler API-Schlüssel zur Authentifizierung. Leer lassen für keine Authentifizierung."
     }
   },
   "footer": {

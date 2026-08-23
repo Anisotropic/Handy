@@ -118,7 +118,8 @@
         "checkFailed": "Không thể kiểm tra quyền. Vui lòng thử lại.",
         "requestFailed": "Không thể yêu cầu quyền. Vui lòng thử lại."
       }
-    }
+    },
+    "remoteModel": "Bỏ qua tạm thời"
   },
   "modelSelector": {
     "custom": "Tùy chỉnh",
@@ -253,6 +254,7 @@
         "app": "Ứng dụng",
         "output": "Đầu ra",
         "transcription": "Chuyển đổi",
+        "remoteTranscription": "Remote Transcription",
         "history": "Lịch sử",
         "experimental": "Thử nghiệm"
       },
@@ -613,6 +615,28 @@
         "label": "Hiển thị điểm mới",
         "description": "Hiển thị ghi chú phát hành sau khi Handy cập nhật"
       }
+    },
+    "remoteStt": {
+      "description": "Sử dụng máy chủ nhận dạng giọng nói từ xa tương thích OpenAI",
+      "enabled": "Bật STT từ xa",
+      "displayName": "Tên hiển thị",
+      "displayNameDescription": "Tên hiển thị trong danh sách thả xuống mô hình",
+      "displayNamePlaceholder": "Từ xa (tương thích OpenAI)",
+      "baseUrl": "URL gốc",
+      "baseUrlDescription": "URL điểm cuối tương thích OpenAI",
+      "baseUrlPlaceholder": "http://127.0.0.1:5092/v1",
+      "model": "Tên mô hình",
+      "modelPlaceholder": "Để trống để sử dụng mặc định của máy chủ",
+      "apiKey": "Khóa API",
+      "apiKeyPlaceholder": "Tùy chọn — để trống nếu không xác thực",
+      "testConnection": "Kiểm tra kết nối",
+      "testing": "Đang kiểm tra...",
+      "ready": "Máy chủ đã sẵn sàng và đang nhận yêu cầu.",
+      "notReady": "Máy chủ đã phản hồi nhưng chưa sẵn sàng.",
+      "unreachable": "Không thể kết nối tới máy chủ. Kiểm tra URL và thử lại.",
+      "availableModels": "Các mô hình khả dụng",
+      "modelDescription": "Tên mô hình tùy chọn. Để trống để sử dụng mặc định của máy chủ.",
+      "apiKeyDescription": "Khóa API tùy chọn để xác thực. Để trống nếu không xác thực."
     }
   },
   "footer": {

@@ -118,7 +118,8 @@
         "checkFailed": "Nepodařilo se zkontrolovat oprávnění. Zkuste to prosím znovu.",
         "requestFailed": "Nepodařilo se požádat o oprávnění. Zkuste to prosím znovu."
       }
-    }
+    },
+    "remoteModel": "Přeskočit na později"
   },
   "modelSelector": {
     "custom": "Vlastní",
@@ -253,6 +254,7 @@
         "app": "Aplikace",
         "output": "Výstup",
         "transcription": "Přepis",
+        "remoteTranscription": "Remote Transcription",
         "history": "Historie",
         "experimental": "Experimentální"
       },
@@ -613,6 +615,28 @@
         "label": "Zobrazovat novinky",
         "description": "Zobrazovat poznámky k vydání po aktualizacích Handy"
       }
+    },
+    "remoteStt": {
+      "description": "Použijte vzdálený server pro převod řeči na text kompatibilní s OpenAI",
+      "enabled": "Povolit vzdálené STT",
+      "displayName": "Zobrazovaný název",
+      "displayNameDescription": "Název zobrazený v rozbalovací nabídce modelů",
+      "displayNamePlaceholder": "Vzdálené (kompatibilní s OpenAI)",
+      "baseUrl": "Základní URL",
+      "baseUrlDescription": "URL koncového bodu kompatibilního s OpenAI",
+      "baseUrlPlaceholder": "http://127.0.0.1:5092/v1",
+      "model": "Název modelu",
+      "modelPlaceholder": "Nechejte prázdné pro výchozí hodnotu serveru",
+      "apiKey": "Klíč API",
+      "apiKeyPlaceholder": "Volitelné — nechte prázdné pro žádné ověření",
+      "testConnection": "Otestovat připojení",
+      "testing": "Testuji...",
+      "ready": "Server je připraven a přijímá požadavky.",
+      "notReady": "Server odpověděl, ale ještě není připraven.",
+      "unreachable": "Nelze se připojit ke serveru. Zkontrolujte URL a zkuste to znovu.",
+      "availableModels": "Dostupné modely",
+      "modelDescription": "Název modelu je volitelný. Nechte prázdné pro výchozí hodnotu serveru.",
+      "apiKeyDescription": "Volitelný klíč API pro ověření. Nechte prázdné pro žádné ověření."
     }
   },
   "footer": {

@@ -118,7 +118,8 @@
         "checkFailed": "Misslyckades med att kontrollera behörigheter. Försök igen.",
         "requestFailed": "Misslyckades med att begära behörighet. Försök igen."
       }
-    }
+    },
+    "remoteModel": "Hoppa över för tillfället"
   },
   "modelSelector": {
     "custom": "Anpassad",
@@ -253,6 +254,7 @@
         "app": "App",
         "output": "Utmatning",
         "transcription": "Transkription",
+        "remoteTranscription": "Remote Transcription",
         "history": "Historik",
         "experimental": "Experimentellt"
       },
@@ -613,6 +615,28 @@
         "label": "Visa nyheter",
         "description": "Visa versionsinformation efter Handy-uppdateringar"
       }
+    },
+    "remoteStt": {
+      "description": "Använd en remote tal-till-text-server som är kompatibel med OpenAI",
+      "enabled": "Aktivera remote STT",
+      "displayName": "Visat namn",
+      "displayNameDescription": "Namnet som visas i modellrullgardinsmenyn",
+      "displayNamePlaceholder": "Remote (OpenAI-kompatibel)",
+      "baseUrl": "Bas-URL",
+      "baseUrlDescription": "OpenAI-kompatibel endpoint-URL",
+      "baseUrlPlaceholder": "http://127.0.0.1:5092/v1",
+      "model": "Modellnamn",
+      "modelPlaceholder": "Lämna tom för att använda serverns standard",
+      "apiKey": "API-nyckel",
+      "apiKeyPlaceholder": "Valfritt — lämna tom för ingen autentisering",
+      "testConnection": "Testa anslutning",
+      "testing": "Testar...",
+      "ready": "Servern är redo och accepterar begäranden.",
+      "notReady": "Servern svarade men är inte redo än.",
+      "unreachable": "Kunde inte nå servern. Kontrollera URL:en och försök igen.",
+      "availableModels": "Tillgängliga modeller",
+      "modelDescription": "Valfritt modellnamn. Lämna tom för att använda serverns standard.",
+      "apiKeyDescription": "Valfri API-nyckel för autentisering. Lämna tom för ingen autentisering."
     }
   },
   "footer": {

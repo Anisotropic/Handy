@@ -118,7 +118,8 @@
         "checkFailed": "अनुमतिहरू जाँच गर्न सकिएन। कृपया फेरि प्रयास गर्नुहोस्।",
         "requestFailed": "अनुमति अनुरोध गर्न सकिएन। कृपया फेरि प्रयास गर्नुहोस्।"
       }
-    }
+    },
+    "remoteModel": "अहिलेको लागि छोड्नुहोस्"
   },
   "modelSelector": {
     "custom": "कस्टम",
@@ -253,6 +254,7 @@
         "app": "एप",
         "output": "आउटपुट",
         "transcription": "ट्रान्सक्रिप्सन",
+        "remoteTranscription": "Remote Transcription",
         "history": "हिस्ट्री",
         "experimental": "प्रयोगात्मक"
       },
@@ -613,6 +615,28 @@
           "details": "Handy को स्थानीय स्पिच-टु-टेक्स्ट transcribe.cpp र ggml मा आधारित छ। Georgi Gerganov र योगदानकर्ताहरूको उत्कृष्ट कामका लागि धन्यवाद।"
         }
       }
+    },
+    "remoteStt": {
+      "description": "OpenAI-संगत रिमोट भोइस-टु-टेक्स्ट सर्भर प्रयोग गर्नुहोस्",
+      "enabled": "रिमोट STT सक्षम पार्नुहोस्",
+      "displayName": "देखाइने नाम",
+      "displayNameDescription": "मोडल ड्रपडाउनमा देखिने नाम",
+      "displayNamePlaceholder": "रिमोट (OpenAI-संगत)",
+      "baseUrl": "बेस URL",
+      "baseUrlDescription": "OpenAI-संगत एन्डपوائन्ट URL",
+      "baseUrlPlaceholder": "http://127.0.0.1:5092/v1",
+      "model": "मोडलको नाम",
+      "modelPlaceholder": "सर्भर डिफाल्ट प्रयोग गर्न खाली राख्नुहोस्",
+      "apiKey": "API कुञ्जी",
+      "apiKeyPlaceholder": "वैकल्पिक — प्रमाणीकरण नगर्न खाली राख्नुहोस्",
+      "testConnection": "कनेक्सन परीक्षण गर्नुहोस्",
+      "testing": "परीक्षण हुँदैछ...",
+      "ready": "सर्भर तयार छ र अनुरोध स्वीकार गर्दैछ।",
+      "notReady": "सर्भरले जवाफ दियो तर अझै तयार छैन।",
+      "unreachable": "सर्भरसम्म पुग्न सकिएन। URL जाँच्नुहोस् र पुनः प्रयास गर्नुहोस्।",
+      "availableModels": "उपलब्ध मोडलहरू",
+      "modelDescription": "वैकल्पिक मोडल नाम। सर्भर डिफाल्ट प्रयोग गर्न खाली राख्नुहोस्।",
+      "apiKeyDescription": "प्रमाणीकरणका लागि वैकल्पिक API कुञ्जी। प्रमाणीकरण नगर्न खाली राख्नुहोस्।"
     }
   },
   "footer": {
